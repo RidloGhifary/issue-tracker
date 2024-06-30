@@ -104,7 +104,7 @@ export function IssueForm() {
           {error && <FormAlertError label={"Something went wrong!"} />}
 
           <Button disabled={form.formState.isSubmitting} type="submit">
-            Submit
+            {form.formState.isSubmitting ? "Loading" : "Submit"}
           </Button>
         </form>
       </Form>
