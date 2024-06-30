@@ -16,7 +16,12 @@ export default function Navbar() {
     {
       href: "/issues",
       label: "Issues",
-      active: pathname.startsWith("/issues"),
+      active: pathname === "/issues",
+    },
+    {
+      href: "/issues/new",
+      label: "New Issue",
+      active: pathname === "/issues/new",
     },
   ];
 
