@@ -24,5 +24,11 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  return NextResponse.json({ success: true });
+  return NextResponse.json({ success: true }, { status: 200 });
+}
+
+export async function GET() {
+  const datas = await db.issue.findMany();
+
+  return NextResponse.json({ success: true, data: datas }, { status: 200 });
 }
