@@ -11,7 +11,7 @@ export default function Navbar() {
     {
       href: "/",
       label: "Dashboard",
-      active: pathname.startsWith("/"),
+      active: pathname === "/",
     },
     {
       href: "/issues",
