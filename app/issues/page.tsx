@@ -1,4 +1,4 @@
-import { getAllIssues } from "@/data/issues";
+import { getAllIssues } from "@/actions/issues";
 
 export default async function Issues() {
   const issues = await getAllIssues();

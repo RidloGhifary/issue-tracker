@@ -19,6 +19,7 @@ import { Textarea } from "./ui/textarea";
 import { createIssuesSchema } from "@/schemas";
 import { useState } from "react";
 import { FormAlertError } from "./form-alert-error";
+import { createIssue } from "@/actions/issues";
 
 export function IssueForm() {
   const [success, setSuccess] = useState<string | undefined>();
@@ -34,19 +35,31 @@ export function IssueForm() {
 
   const onSubmit = async (values: z.infer<typeof createIssuesSchema>) => {
     try {
-      await fetch("/api/issues", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      }).then((data) => {
-        if (!data.ok) {
-          setError("Error occurred when submitting!");
-        } else {
-          setSuccess("Success creating!");
-        }
-      });
+      // await fetch("/api/issues", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(values),
+      // }).then((data) => {
+      //   if (!data.ok) {
+      //     setError("Error occurred when submitting!");
+      //   } else {
+      //     setSuccess("Success creating!");
+      //   }
+      // });
+
+      await createIssue(values)
+        .then((data) => {
+          if (data.error) {
+            setError(data.error);
+          } else {
+            setSuccess(data.success);
+          }
+        })
+        .catch(() => {
+          setError("Something went wrong!");
+        });
     } catch {
       setError("Error occurred when submitting!");
     }
