@@ -1,34 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
-
-import { createIssuesSchema } from "@/schemas";
-import db from "@/lib/db";
+import { NextRequest, NextResponse } from 'next/server';
+import prisma from '@/prisma/client';
+import { issueSchema } from '../../validationSchemas';
+import { getServerSession } from 'next-auth';
+import authOptions from '@/app/auth/authOptions';
 
 export async function POST(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session)
+    return NextResponse.json({}, { status: 401 });
+
   const body = await request.json();
+  const validation = issueSchema.safeParse(body);
+  if (!validation.success)
+    return NextResponse.json(validation.error.format(), { status: 400 });
 
-  const validatedRequest = createIssuesSchema.safeParse(body);
-
-  if (!validatedRequest.success) {
-    return NextResponse.json(
-      {
-        error: validatedRequest.error,
-      },
-      { status: 400 }
-    );
-  }
-
-  await db.issue.create({
-    data: {
-      title: validatedRequest.data.title,
-      description: validatedRequest.data.description,
-    },
+  const newIssue = await prisma.issue.create({
+    data: { title: body.title, description: body.description },
   });
 
-  return NextResponse.json({ success: true }, { status: 200 });
-}
-
-export async function GET() {
-  const datas = await db.issue.findMany();
-
-  return NextResponse.json({ success: true, data: datas }, { status: 200 });
+  return NextResponse.json(newIssue, { status: 201 });
 }

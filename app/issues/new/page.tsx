@@ -1,9 +1,18 @@
-import { IssueForm } from "@/components/issue-form";
+import dynamic from "next/dynamic";
+import IssueFormSkeleton from "./loading";
 
-export default function NewIssue() {
+const IssueForm = dynamic(
+  () => import('@/app/issues/_components/IssueForm'),
+  { 
+    ssr: false,
+    loading: () => <IssueFormSkeleton />
+  }
+);
+
+const NewIssuePage = () => {
   return (
-    <div className="max-w-7xl container mx-auto py-8">
-      <IssueForm />
-    </div>
-  );
+    <IssueForm />
+  )
 }
+
+export default NewIssuePage
